@@ -241,18 +241,49 @@ NO* buscarElementoArvoreComPai(NO* no, int valor, NO*& pai)
 void removerElementoArvore(NO* no, int valor) {
 	NO* pai = NULL;
 	NO* atual = buscarElementoArvoreComPai(no, valor, pai);
+
 	if (atual == NULL) {
 		cout << "Elemento nao encontrado \n";
 		return;
 	}
 
-
 	// caso 1: sem filhos	
-	
+	if (atual->dir == NULL && atual->esq == NULL) {
+		if (pai == NULL) {
+			free(raiz);
+			raiz = NULL;
+			return;
+		}
+
+		if (pai->esq == atual)
+			pai->esq = NULL;
+		else
+			pai->dir = NULL;
+
+		free(atual);
+		return;
+	}
 
 	// caso 2: um filho	
-	
+	NO* filho = NULL;
+	if (atual->dir == NULL && atual->esq != NULL)
+		filho = atual->esq;
 
+	else if (atual->dir != NULL && atual->esq == NULL)
+		filho = atual->dir;
+
+	if (pai->dir == atual) {
+		pai->dir = filho;
+		free(atual);
+
+		return;
+	}
+	else {
+		pai->esq = filho;
+		free(atual);
+
+		return;
+	}
 	// caso 3: dois filhos
 
 	// procura o elmento mais a esquerda da sub-arvore da direita
@@ -269,16 +300,12 @@ void removerElementoArvore(NO* no, int valor) {
 	// se existir uma sub-arvore a direita do sucessor , entao
 	// ela deve ser ligada ao pai do sucessor
 	if (sucessor->dir != NULL)
-	{
 		paiSucessor->esq = sucessor->dir;
-	}
-	else {
+	else
 		paiSucessor->esq = NULL;
-	}
 
 	//libera memoria
 	free(sucessor);
-
 
 }
 
